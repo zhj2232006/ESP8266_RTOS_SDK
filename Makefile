@@ -284,7 +284,7 @@ ifeq ($(app), 0)
 	@echo "BIN_PATH: $(BIN_PATH)"
 	@echo ""
 	@echo "No boot needed."
-	@echo "Generate eagle.flash.bin and eagle.irom0text.bin successully in BIN_PATH"
+	@echo "Generate eagle.flash.bin and eagle.irom0text.bin successully in $(BIN_PATH)"
 	@echo "eagle.flash.bin-------->0x00000"
 	@echo "eagle.irom0text.bin---->0x20000"
 else
@@ -310,7 +310,7 @@ else
 
 	@mv eagle.app.flash.bin $(BIN_PATH)/upgrade/$(BIN_NAME).bin
 	@rm eagle.app.v6.*
-	@echo "Generate $(BIN_NAME).bin successully in BIN_PATH"
+	@echo "Generate $(BIN_NAME).bin successully in $(BIN_PATH)"
 	@echo "boot.bin------------>0x00000"
 	@echo "$(BIN_NAME).bin--->$(addr)"
 endif
@@ -348,11 +348,12 @@ endif
 
 $(OBJODIR)/%.o: %.c
 	@mkdir -p $(OBJODIR);
-	$(CC) $(if $(findstring $<,$(DSRCS)),$(DFLAGS),$(CFLAGS)) $(COPTS_$(*F)) -o $@ -c $<
+	@echo CC $<
+	@$(CC) $(if $(findstring $<,$(DSRCS)),$(DFLAGS),$(CFLAGS)) $(COPTS_$(*F)) -o $@ -c $<
 
 $(OBJODIR)/%.d: %.c
 	@mkdir -p $(OBJODIR);
-	@echo DEPEND: $(CC) -M $(CFLAGS) $<
+	@echo DEP $<
 	@set -e; rm -f $@; \
 	$(CC) -M $(CFLAGS) $< > $@.$$$$; \
 	sed 's,\($*\.o\)[ :]*,$(OBJODIR)/\1 $@ : ,g' < $@.$$$$ > $@; \
